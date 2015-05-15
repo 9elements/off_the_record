@@ -15,7 +15,7 @@ module Typecasted
       if typecasting
         handle = self.class.off_the_record_handle
         type = handle.attributes[attr].type
-        typecaster = handle.typecasters.fetch(type) { raise "No typecaster for type #{type.inspect}" }
+        typecaster = handle.typecasters.merge(nil => ->(v){v}).fetch(type) { raise "No typecaster for type #{type.inspect}" }
         typecaster.call(super(attr))
       else
         super(attr)
