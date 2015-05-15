@@ -42,6 +42,14 @@ class Base
       off_the_record_handle.add_attribute(attr)
       return attr
     end
+
+    def model_name
+      @model_name ||= ActiveModel::Name.new(self, nil, model_name_base)
+    end
+
+    def model_name_base
+      name.demodulize
+    end
   end
 
   def initialize(params = nil)
