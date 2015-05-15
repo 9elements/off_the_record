@@ -1,5 +1,4 @@
-require "off_the_record/version"
+require_relative 'off_the_record/base'
 
 module OffTheRecord
-  # Your code goes here...
 end
