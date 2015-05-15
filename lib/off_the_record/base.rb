@@ -50,6 +50,13 @@ class Base
     self.class.off_the_record_handle.apply_defaults(self)
   end
 
+  def assign_attributes(params = nil)
+    params = sanitize_for_mass_assignment(params)
+    params.each do |attr, value|
+      self.public_send("#{attr}=", value)
+    end if params
+  end
+
   def attributes
     @attributes ||= ActiveSupport::HashWithIndifferentAccess.new
   end
