@@ -1,3 +1,5 @@
+require 'active_model'
+
 require_relative 'model_handle'
 require_relative 'attribute'
 require_relative 'attribute/descriptor'
