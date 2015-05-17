@@ -1,8 +1,21 @@
 # OffTheRecord
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/off_the_record`. To experiment with that code, run `bin/console` for an interactive prompt.
+OffTheRecord is a small library for creating form models for Rails applications.
 
-TODO: Delete this and the text above, and describe your gem
+Use form models in Rails whenever
+
+* form input from a user covers multiple database models
+* form input from a user contains data not intended for persistence
+
+Features:
+
+* Compatibility: Form models created with OffTheRecord can be used together with `form_for` and resourceful routing.
+* secure mass assignment
+* Declarative DSL for attributes
+* type conversion
+* default values
+* query methods for attributes
+* validations and errors
 
 ## Installation
 
@@ -22,13 +35,62 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Derive directly from `OffTheRecord::Base` and declare your attributes:
 
-## Development
+```ruby
+class Signup < OffTheRecord::Base
+  attribute :email_address
+  attribute :initial_password
+  attribute :tos_accepted, type: :boolean
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+  validates :tos_accepted, acceptance: true
+  validates :email_address, presence: true, email: true
+  validates :validate_password_strength
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+  def validate_password_strength
+    ...
+  end
+end
+```
+
+You can instantiate a new record with values from a plain hash:
+
+```ruby
+Signup.new(email_address: 'example@example.com')
+```
+
+The form object class keeps track of the necessary permit filters, so you can perform
+instantiation from securely filtered params like this:
+
+```ruby
+Signup.new(params.require(:signup).permit(*Signup.permit_filters)
+```
+
+Since this is a common use case and the model knows its own name, there is a shortcut for this:
+
+```ruby
+Signup.from_params(params)
+```
+
+Note there is a twist involved in the naming of the model which has effect on the form
+input `name` attributes and the `action` attribute derived by `form_for` from the name of
+the model: the model is treated *as if it is not nested* within a class or module. This
+allows you to write down your form models right inside a controller or a service object
+without excessively long naming leaking your implementation details to the front end, and
+without the need for tweaking options to `form_for`. Note you will still want to use the `:url`
+option in most cases.
+
+You can implement your own attributes any time simply by defining a getter and setter.
+Call `permit` to add a permit filter for your attributes:
+
+```ruby
+class MyModel < OffTheRecord::Base
+  attr_accessor :array_of_strings
+
+  permit array_of_strings: []
+end
+```
+
 
 ## Contributing
 
