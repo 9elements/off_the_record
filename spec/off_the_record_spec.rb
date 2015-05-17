@@ -323,30 +323,58 @@ describe "when used with form_for" do
     Class.new(Rails::Engine)
   end
 
+  let(:route_methods) do
+    Module.new do
+      def test_model_path
+        "member_path"
+      end
+
+      def test_models_path
+        "collection_path"
+      end
+
+      def nested_models_path
+        "nested_models_collection_path"
+      end
+
+      def signins_path
+        "named_models_collection_path"
+      end
+    end
+  end
+
   let(:view_context) do
     controller = ActionController::Base.new
     controller.request = ActionDispatch::Request.new({})
     result = controller.view_context
     result.extend ActionDispatch::Routing::PolymorphicRoutes # no idea why this is necessary
+    result.extend route_methods
+  end
+
+  it "renders proper action url derived from model name" do
+    form = view_context.form_for(model) do |f|
+      view_context.concat f.text_field :first
+    end
+    expect(form).to include('action="collection_path"')
   end
 
   it "renders attribute values as form input values" do
     model.first = "firstvalue"
-    form = view_context.form_for(model, url: "bogus") do |f|
+    form = view_context.form_for(model) do |f|
       view_context.concat f.text_field :first
     end
     expect(form).to include('firstvalue')
   end
 
   it "renders form for POST method" do
-    form = view_context.form_for(model, url: "bogus") do |f|
+    form = view_context.form_for(model) do |f|
       view_context.concat f.text_field :first
     end
     expect(form).to include('method="post"')
   end
 
   it "renders proper input param names" do
-    form = view_context.form_for(model, url: "bogus") do |f|
+    form = view_context.form_for(model) do |f|
       view_context.concat f.text_field :first
     end
     expect(form).to include('name="test_model[first]"')
@@ -361,6 +389,13 @@ describe "when used with form_for" do
       end
       expect(form).to include('name="nested_model[first]"')
     end
+
+    it "renders proper action url derived from model name" do
+      form = view_context.form_for(model) do |f|
+        view_context.concat f.text_field :first
+      end
+      expect(form).to include('action="nested_models_collection_path"')
+    end
   end
 
   context "with a model providing its own model name base" do
@@ -371,6 +406,13 @@ describe "when used with form_for" do
         view_context.concat f.text_field :first
       end
       expect(form).to include('name="signin[first]"')
+    end
+
+    it "renders proper action url derived from model name" do
+      form = view_context.form_for(model) do |f|
+        view_context.concat f.text_field :first
+      end
+      expect(form).to include('action="named_models_collection_path"')
     end
   end
 end
