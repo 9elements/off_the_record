@@ -37,6 +37,10 @@ class Base
       off_the_record_handle.permits.to_permit_filters
     end
 
+    def from_params(params)
+      new(params.require(model_name.param_key).permit(*permit_filters))
+    end
+
     def attribute(name, options = {})
       attr = Attribute::Descriptor.new(name.to_s, options)
       off_the_record_handle.add_attribute(attr)

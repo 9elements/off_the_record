@@ -417,3 +417,24 @@ describe "when used with form_for" do
   end
 end
 
+describe ".from_params" do
+  def described_class; TestModel; end
+  subject(:model) { described_class.new }
+
+  def params_data
+    {
+      test_model: {
+        first: "first_value"
+      }
+    }
+  end
+
+  def controller_parameters
+    ActionController::Parameters.new(params_data)
+  end
+
+  it "initializes right from the entire params hash" do
+    model = TestModel.from_params(controller_parameters)
+    expect(model.first).to eql("first_value")
+  end
+end
