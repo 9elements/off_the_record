@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Thomas Stratmann"]
   spec.email         = ["thomas.stratmann@9elements.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = %q{small library for creating form models for Rails applications}
+  spec.description   = %q{OffTheRecord is a small library for creating form models for Rails applications.}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
