@@ -41,6 +41,14 @@ class Base
       new(params.require(model_name.param_key).permit(*permit_filters))
     end
 
+    def from_optional_params(params)
+      if params.key?(model_name.param_key)
+        from_params(params)
+      else
+        new
+      end
+    end
+
     def attribute(name, options = {})
       attr = Attribute::Descriptor.new(name.to_s, options)
       off_the_record_handle.add_attribute(attr)

@@ -72,6 +72,8 @@ Since this is a common use case and the model knows its own name, there is a sho
 Signup.from_params(params)
 ```
 
+There is also `from_optional_params` which just creates a new record in case the params key is missing.
+
 Note there is a twist involved in the naming of the model which has effect on the form
 input `name` attributes and the `action` attribute derived by `form_for` from the name of
 the model: the model is treated *as if it is not nested* within a class or module. This
