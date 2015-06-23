@@ -1,4 +1,4 @@
-## 0.2.0 (NYD)
+## 0.2.0 (2015-06-23)
 
 * nil values are no longer subject to typecasting
 * New feature: from_optional_params
