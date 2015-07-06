@@ -16,7 +16,7 @@ class Permits < Hash
       if pair.last.nil?
         result << pair.first
       else
-        result << { result.first => result.last }
+        result << { pair.first => pair.last }
       end
     end
   end

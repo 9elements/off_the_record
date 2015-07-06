@@ -1,3 +1,7 @@
+## 0.2.1 (2015-07-06)
+
+* Bugfix: Permits#to_permit_filters now converts values from hash pairs correctly
+
 ## 0.2.0 (2015-06-23)
 
 * nil values are no longer subject to typecasting
