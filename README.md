@@ -80,6 +80,12 @@ In cases where `params[:signup]` might be missing, you can use
 Signup.from_optional_params(params)
 ```
 
+There is also assignment as an instance method:
+
+```ruby
+signup.assign_from_params(params)
+```
+
 Note that `OffTheRecord` overrides default model naming because the default use case is
 having the model declared right inside the controller:
 
