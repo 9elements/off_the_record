@@ -59,31 +59,60 @@ You can instantiate a new record with values from a plain hash:
 Signup.new(email_address: 'example@example.com')
 ```
 
-The form object class keeps track of the necessary permit filters, so you can perform
+### Initialization from ActionController parameters
+
+The form object class keeps track of the necessary permit filters, so you could perform
 instantiation from securely filtered params like this:
 
 ```ruby
 Signup.new(params.require(:signup).permit(*Signup.permit_filters)
 ```
 
-Since this is a common use case and the model knows its own name, there is a shortcut for this:
+Since an `OffTheRecord` model knows its name as well as its parameters, there is a shortcut for this:
 
 ```ruby
 Signup.from_params(params)
 ```
 
-There is also `from_optional_params` which just creates a new record in case the params key is missing.
+In cases where `params[:signup]` might be missing, you can use
 
-Note there is a twist involved in the naming of the model which has effect on the form
-input `name` attributes and the `action` attribute derived by `form_for` from the name of
-the model: the model is treated *as if it is not nested* within a class or module. This
-allows you to write down your form models right inside a controller or a service object
-without excessively long naming leaking your implementation details to the front end, and
-without the need for tweaking options to `form_for`. Note you will still want to use the `:url`
-option in most cases.
+```ruby
+Signup.from_optional_params(params)
+```
+
+Note that `OffTheRecord` overrides default model naming because the default use case is
+having the model declared right inside the controller:
+
+```ruby
+class SignupController < ApplicationController
+  ...
+  class Signup < OffTheRecord::Base
+    ...
+  end
+end
+```
+
+Without tweaking the model naming, the params key for the signup params would be `:signup_controller_signup` (leaking implementation details), instead the nesting is not taken into account for the naming, so the param key is really `:signup`. With `.from_params` e.a. however, you won't need to touch these details.
+
+### Control over permit filters
+
+Call `permit` on the form model class to override the permit filter for an attribute:
+
+```ruby
+class MyModel < OffTheRecord::Base
+  attribute :array_of_strings
+
+  permit array_of_strings: []
+end
+```
+
+This must happen _after_ the `attribute` call.
+
+### Custom attributes
 
 You can implement your own attributes any time simply by defining a getter and setter.
-Call `permit` to add a permit filter for your attributes:
+You have to declare a permit filter for each (and possibly implement type conversion in
+a custom setter).
 
 ```ruby
 class MyModel < OffTheRecord::Base
@@ -92,7 +121,6 @@ class MyModel < OffTheRecord::Base
   permit array_of_strings: []
 end
 ```
-
 
 ## Contributing
 
