@@ -1,3 +1,8 @@
+## 0.3.0 (2015-07-27)
+
+* #assign_from_params
+* documentation improvements
+
 ## 0.2.1 (2015-07-06)
 
 * Bugfix: Permits#to_permit_filters now converts values from hash pairs correctly
