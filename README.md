@@ -45,7 +45,7 @@ class Signup < OffTheRecord::Base
 
   validates :tos_accepted, acceptance: true
   validates :email_address, presence: true, email: true
-  validates :validate_password_strength
+  validate :validate_password_strength
 
   def validate_password_strength
     ...
