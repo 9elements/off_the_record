@@ -38,7 +38,7 @@ class Base
     end
 
     def from_params(params)
-      new(params.require(model_name.param_key).permit(*permit_filters))
+      new.assign_from_params(params)
     end
 
     def from_optional_params(params)
@@ -75,6 +75,14 @@ class Base
     attributes.each do |attr, value|
       self.public_send("#{attr}=", value)
     end if attributes
+  end
+
+  def assign_from_params(params)
+    assign_attributes(
+      params
+        .require(model_name.param_key)
+        .permit(*self.class.permit_filters))
+    self
   end
 
   def attributes
