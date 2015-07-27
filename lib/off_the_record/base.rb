@@ -64,17 +64,17 @@ class Base
     end
   end
 
-  def initialize(params = nil)
-    params = sanitize_for_mass_assignment(params)
-    super(params)
+  def initialize(attributes = nil)
+    attributes = sanitize_for_mass_assignment(attributes)
+    super(attributes)
     self.class.off_the_record_handle.apply_defaults(self)
   end
 
-  def assign_attributes(params = nil)
-    params = sanitize_for_mass_assignment(params)
-    params.each do |attr, value|
+  def assign_attributes(attributes = nil)
+    attributes = sanitize_for_mass_assignment(attributes)
+    attributes.each do |attr, value|
       self.public_send("#{attr}=", value)
-    end if params
+    end if attributes
   end
 
   def attributes
