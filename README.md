@@ -43,7 +43,7 @@ class Signup < OffTheRecord::Base
   attribute :initial_password
   attribute :tos_accepted, type: :boolean
 
-  validates :tos_accepted, acceptance: true
+  validates :tos_accepted, acceptance: { :accept => true }
   validates :email_address, presence: true, email: true
   validate :validate_password_strength
 
