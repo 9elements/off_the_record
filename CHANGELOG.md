@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Bugfix: do not assume AM models implement model_name on the instance, only on the class (needed for older Rails versions)
+
 ## 0.3.0 (2015-07-27)
 
 * #assign_from_params

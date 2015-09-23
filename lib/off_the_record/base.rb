@@ -80,7 +80,7 @@ class Base
   def assign_from_params(params)
     assign_attributes(
       params
-        .require(model_name.param_key)
+        .require(self.class.model_name.param_key)
         .permit(*self.class.permit_filters))
     self
   end
