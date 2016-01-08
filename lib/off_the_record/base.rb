@@ -42,11 +42,7 @@ class Base
     end
 
     def from_optional_params(params)
-      if params.key?(model_name.param_key)
-        from_params(params)
-      else
-        new
-      end
+      new.assign_from_optional_params(params)
     end
 
     def attribute(name, options = {})
