@@ -85,6 +85,13 @@ class Base
     self
   end
 
+  def assign_from_optional_params(params)
+    if params.key?(self.class.model_name.param_key)
+      assign_from_params(params)
+    end
+    self
+  end
+
   def attributes
     @attributes ||= ActiveSupport::HashWithIndifferentAccess.new
   end
