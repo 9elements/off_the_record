@@ -8,9 +8,9 @@ module OffTheRecord
 
     def self.features
       [
+        Default,
         GetterSetter,
         QueryMethods,
-        Default,
         Typecasted
       ]
     end

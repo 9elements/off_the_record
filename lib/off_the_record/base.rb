@@ -63,7 +63,6 @@ class Base
   def initialize(attributes = nil)
     attributes = sanitize_for_mass_assignment(attributes)
     super(attributes)
-    self.class.off_the_record_handle.apply_defaults(self)
   end
 
   def assign_attributes(attributes = nil)

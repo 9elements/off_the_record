@@ -19,14 +19,6 @@ class ModelHandle
     attributes[attribute.name] = attribute
     attribute.setup(self)
   end
-
-  def apply_defaults(record)
-    attributes.values.each do |attribute|
-      if attribute.default_value? && !record.attributes.key?(attribute.name)
-        record.attributes[attribute.name] = attribute.default_value
-      end
-    end
-  end
 end
 
 end

@@ -11,7 +11,7 @@ module GetterSetter
     end
 
     def attribute(attr)
-      attributes[attr]
+      attributes.fetch(attr) { super }
     end
 
     def attribute=(attr, value)
