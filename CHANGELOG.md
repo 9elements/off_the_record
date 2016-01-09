@@ -3,6 +3,8 @@
 * #assign_from_optional_params
 * documentation improvements
 * DEPRECATION of creation directly from attributes: the default constructor will be removed in the future
+* defaulting mechanism refactored to support overriding the constructor without having to call super
+  (this fixes defaulting when overriding the constructor and allows to remove the constructor param in the future)
 
 ## 0.3.1 (2015-10-22)
 

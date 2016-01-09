@@ -60,6 +60,7 @@ class Base
     end
   end
 
+  # DEPRECATED to use this method with attributes
   def initialize(attributes = nil)
     attributes = sanitize_for_mass_assignment(attributes)
     super(attributes)
