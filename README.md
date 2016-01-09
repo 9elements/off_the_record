@@ -53,40 +53,58 @@ class Signup < OffTheRecord::Base
 end
 ```
 
-You can instantiate a new record with values from a plain hash:
+Off the bat, instances have getters and setters for the declared attributes,
+and you can assign a hash of attributes using `assign_attributes`.
+Type conversion happens when attributes are read:
 
-```ruby
-Signup.new(email_address: 'example@example.com')
+```
+signup = Signup.new
+signup.assign_attributes(email_address: 'johndoe@example.com', tos_accepted: "1")
+signup.tos_accepted # => true
 ```
 
-### Initialization from ActionController parameters
+### ActionController parameters and `strong_parameter`-like safety
 
-The form object class keeps track of the necessary permit filters, so you could perform
-instantiation from securely filtered params like this:
+The form object class keeps track of the necessary permit filters, and it knows its
+own name and can look for its attributes in an ActionController params object.
+(Note that the param name is also simplified, see below)
 
-```ruby
-Signup.new(params.require(:signup).permit(*Signup.permit_filters)
-```
-
-Since an `OffTheRecord` model knows its name as well as its parameters, there is a shortcut for this:
-
-```ruby
-Signup.from_params(params)
-```
-
-In cases where `params[:signup]` might be missing, you can use
-
-```ruby
-Signup.from_optional_params(params)
-```
-
-There is also assignment as an instance method:
+Thus, to assign from a params object, you only have to write
 
 ```ruby
 signup.assign_from_params(params)
 ```
 
-Note that `OffTheRecord` overrides default model naming because the default use case is
+instead of
+
+```ruby
+signup.assign_attributes(params.require(:signup).permit(*Signup.permit_filters))
+```
+
+Sometimes, the object's attributes may be completely absent from the params object.
+In that case you can write
+
+```ruby
+signup.assign_from_optional_params(params)
+```
+
+which will not alter `signup` if `params.key?(:signup)` is false.
+
+NOTE constructing directly from params is DEPRECATED.
+
+### Creation from ActionController parameters
+
+Most of the time you will not need to do custom initialization and setup before the assignment
+from params. There are handy shortcuts for these cases:
+
+```ruby
+Signup.from_params(params)
+Signup.from_optional_params(params)
+```
+
+### Simplified param keys / model naming
+
+`OffTheRecord` overrides default model naming because the default use case is
 having the model declared right inside the controller:
 
 ```ruby
@@ -98,7 +116,11 @@ class SignupController < ApplicationController
 end
 ```
 
-Without tweaking the model naming, the params key for the signup params would be `:signup_controller_signup` (leaking implementation details), instead the nesting is not taken into account for the naming, so the param key is really `:signup`. With `.from_params` e.a. however, you won't need to touch these details.
+Without tweaking the model naming, the params key for the signup params would be
+`:signup_controller_signup` (thus leaking implementation details)
+Instead, nesting is not taken into account for the generated model name. The param
+key in the above example therefore is simply `:signup`.
+You don't have to worry about these details if you use the `from_(optional_)params` methods.
 
 ### Control over permit filters
 
