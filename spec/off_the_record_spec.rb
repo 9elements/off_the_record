@@ -86,13 +86,32 @@ end
 describe "defaults" do
   subject(:model) { TestModel.new }
 
-  it "returns the default value when not set" do
-    expect(model.defaulted).to be :default
+  context "when attribute is not set" do
+    it "returns the default value" do
+      expect(model.defaulted).to be :default
+    end
+
+    it "returns the default value" do
+      expect(model.defaulted).to be :default
+    end
+
+    it "reflects attribute default in query method" do
+      expect(model.defaulted?).to be true
+    end
   end
 
-  it "returns nil when value set to nil" do
-    model.defaulted = nil
-    expect(model.defaulted).to be_nil
+  context "when attribute is set to nil" do
+    before do
+      model.defaulted = nil
+    end
+
+    it "returns nil" do
+      expect(model.defaulted).to be_nil
+    end
+
+    it "reflects attribute default in query method" do
+      expect(model.defaulted?).to be false
+    end
   end
 end
 
