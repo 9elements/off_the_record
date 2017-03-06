@@ -1,0 +1,36 @@
+image: "ruby:2.3"
+
+stages:
+  - unittests
+  - audit
+
+cache:
+  paths:
+    - vendor/ruby
+
+before_script:
+  - apt-get update -qy
+  - apt-get -y install nodejs
+#  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#  - eval $(ssh-agent -s)
+#  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+#  - mkdir -p ~/.ssh
+#  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - ruby -v
+  - gem install bundler --no-ri --no-rdoc
+  - bundle install --jobs $(nproc) --path=/cache/bundler
+
+rspec:
+  stage: unittests
+  script:
+    - "rspec -f d --color --tty"
+  artifacts:
+    paths:
+      - coverage/
+
+bundle_audit:
+  stage: audit
+  script:
+    - gem install bundler-audit
+    - bundle-audit update
+    - bundle-audit check
